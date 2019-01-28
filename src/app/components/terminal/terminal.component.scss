@@ -1,0 +1,75 @@
+$background-color: #232323;
+$entry-color: #32c146;
+$error-color: #D24D57;
+$comment-color: gray;
+$default-color: #FFF;
+:host{
+    display: block;
+    height: 100%;
+    background: $background-color;
+    color: $default-color;
+    font-family: monospace;
+    padding: 10px;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.5;
+    box-sizing: border-box;
+    overflow: overlay;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #ddd;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #666; 
+    }
+
+    & *::selection, & /deep/ *::selection {
+        background: $default-color !important; /* WebKit/Blink Browsers */
+        text-shadow: 0 0 0 $background-color !important;
+    }
+    & > div{
+        color: $default-color;
+
+        &>div.error, &>div.red{
+            color: $error-color;
+        }
+        pre{
+            margin: 0;
+        }
+        .entry{
+            text-shadow: 0 0 0 $entry-color;
+            outline: none;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+        .load:before{
+            content: '';
+            animation: load 1s infinite;
+        }
+    }
+        
+    .comment{
+        color :  transparent;
+        text-shadow: 0 0 0 $comment-color;
+    }
+    
+    
+
+}
+
+@keyframes load {
+  0% { content: "\7C"; }
+  14.3% { content: "\2F"; }
+  28.6% { content: "\2D"; } /*\2013*/
+  42.9% { content: "\5C"; }
+  57.2% { content: "\7C"; }
+  71.5% { content: "\2F"; }
+  85.8% { content: "\2D"; }
+  100% { content: "\5C"; }
+}

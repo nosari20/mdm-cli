@@ -1,0 +1,20 @@
+<header>
+  <div class="window-controls">
+      <div class="window-icon-bg window-close" (click)="close()">
+          <div class="window-icon icon-close"></div>
+      </div>
+      <div *ngIf="maximized" class="window-icon-bg" (click)="unmaximize()">
+          <div class="window-icon icon-unmaximize"></div>
+      </div>
+      <div *ngIf="!maximized" class="window-icon-bg" (click)="maximize()">
+        <div class="window-icon icon-maximize"></div>
+      </div>
+      <div class="window-icon-bg" (click)="minimize()">
+          <div class="window-icon icon-minimize"></div>
+      </div>
+      
+  </div>
+</header>
+<div>
+  <ng-content></ng-content>
+</div>
