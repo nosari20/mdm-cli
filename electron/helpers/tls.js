@@ -1,6 +1,6 @@
 const tls = require('tls');
 
-function check(host, port, timeout = 55000){
+function check(host, port, timeout = 5000){
 
     port = port || 443;
 
@@ -39,7 +39,7 @@ function check(host, port, timeout = 55000){
                   errno: 'ETIMEDOUT',
                   code: 'ETIMEDOUT',
                   syscall: 'connect',
-                  port: 9997 
+                  port: port 
             })
 
         }, timeout);
