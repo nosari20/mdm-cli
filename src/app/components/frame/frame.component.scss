@@ -13,9 +13,65 @@ header{
     height: $header_height;
     background-color: $background-color;
     color: $color;
+    display: flex;
 
+    .menu-bar{
+        height: $header-height;
+        flex: 1;
+        font-size: 13px;
 
+        .menu-bg, & /deep/ .menu-bg{
+            display: inline-block;
+            float: left;
+            height: $header-height;
+            line-height:$header-height;
+            vertical-align: middle;
+            position: relative;
+            padding: 0 10px;
+            &:hover {
+                background-color: $background-color-hover;
+            } 
+            
+            &:hover ul.menu-sub{
+                visibility: visible;
+            }
+            
+            ul.menu-sub{
+                position: absolute;
+                width: auto;
+                min-width: 300px;;
+                left : 0;
+                top: $header-height;
+                background: rgb(37, 37, 38);
+                box-shadow: rgb(0, 0, 0) 0px 2px 4px;
+                margin: 0;
+                visibility: hidden;
+                list-style: none;
+                padding: 0;
+                z-index: 1;
+
+                li{
+                    padding: 2px 10px;
+                    &:hover {
+                        background-color: $background-color-hover;
+                    }
+
+                    &.divider{
+                        height: 1px;
+                        padding: 0;
+                        background-color: $background-color-hover;
+                    }
+
+                }
+                
+            }
+            
+        }
+    }
+    
     .window-controls{
+        height: $header-height;
+        flex: 1;
 
         .window-icon-bg{
 
@@ -50,6 +106,6 @@ header{
     }
 }
 
-div{
+:host> div{
     height: calc(100vh - #{$header-height});
 }

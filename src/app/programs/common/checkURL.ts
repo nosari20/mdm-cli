@@ -49,7 +49,7 @@ export const CheckURL: Program = <Program>{
 
             let statusCode = res.statusCode;
             if(statusCode == 403){
-                io.out(`Restricted`,`color:red`)
+                io.out(`Restricted`,`color:red`);
             }else{
                 io.out(`Avaibale (HTTP ${statusCode})`,`color:green`);
             }

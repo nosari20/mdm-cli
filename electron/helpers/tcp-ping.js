@@ -5,7 +5,6 @@ function tcp_ping(host, port, timeout = 5000){
   return new Promise(function(resolve, reject)  {
 
     let socket = Sock.Socket();
-    let connected = false;
     socket.connect(port,host, function() {});
 
 
@@ -13,12 +12,16 @@ function tcp_ping(host, port, timeout = 5000){
     startTime = startTime[0] * 1e3 + startTime[1] * 1e-6;
 
     socket.on('connect', function() {
-      connected = true;
       socket.end();
     });
   
     socket.on('error', function(err) {
-      return resolve(err);
+      if(err.errno == 'ECONNRESET'){
+        let endTime = process.hrtime()
+        endTime = endTime[0] * 1e3 + endTime[1] * 1e-6;
+        return resolve({result: 'success', time: Math.ceil(endTime - startTime)});
+      }
+      return resolve(err);    
     });
 
     socket.setTimeout(2);
@@ -26,8 +29,7 @@ function tcp_ping(host, port, timeout = 5000){
     socket.on('end', function(data) {
         let endTime = process.hrtime()
         endTime = endTime[0] * 1e3 + endTime[1] * 1e-6;
-
-        return resolve({result: 'success', time: endTime - startTime});
+        return resolve({result: 'success', time: Math.ceil(endTime - startTime)});
     });
 
     setTimeout(() => {

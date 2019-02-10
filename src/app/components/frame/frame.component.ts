@@ -10,7 +10,7 @@ export class FrameComponent implements OnInit {
 
   constructor(private _electronService: ElectronService) { }
 
-  maximized: boolean
+  maximized: boolean;
 
   ngOnInit() {
     let remote : Electron.Remote = this._electronService.remote;

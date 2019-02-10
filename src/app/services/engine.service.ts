@@ -9,6 +9,7 @@ import { CheckCert } from '../programs/common/checkCert';
 import { TCPPing } from '../programs/common/tcpPing'
 import { HTTP } from '../programs/common/http'
 import { Script } from '../programs/common/script'
+import { File } from '../programs/common/file'
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ export class EngineService {
     this.programs.push(CheckCert);
     this.programs.push(TCPPing);
     this.programs.push(HTTP);
+    this.programs.push(File);
     this.programs.push(Script);
 
     this.programs.push(Core);

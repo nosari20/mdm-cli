@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, ChangeDetectorRef, Input } from '@angular/core';
 import { Command } from '../../types/Command'
 import {EngineService } from '../../services/engine.service'
 import { IO, Result } from '../../types/IO';
@@ -10,7 +10,8 @@ import { IO, Result } from '../../types/IO';
 })
 export class TerminalComponent implements OnInit {
 
-  cliName: string = 'cli';
+  @Input() cliName: string = 'cli';
+  @Input() active: boolean = true;;
   prompt: boolean = true;
   entry: string = '';
   session: Command[] = [];
@@ -22,6 +23,7 @@ export class TerminalComponent implements OnInit {
   historyIndex: number;
   quiet: boolean = false;
   process: IO;
+  
 
   
   @ViewChild('input') myInput: ElementRef; 
@@ -33,12 +35,13 @@ export class TerminalComponent implements OnInit {
   }
 
 
-  ngAfterViewChecked() {        
+  scroll() {
     try {
-      this.element.nativeElement.scrollTop = this.element.nativeElement.clientHeight;
+      this.element.nativeElement.scrollTop = this.element.nativeElement.scrollHeight;
     } catch(err) { 
-    }        
-  } 
+
+    } 
+  }
 
 
   setFocus() { 
@@ -57,10 +60,12 @@ export class TerminalComponent implements OnInit {
 
     let sel = window.getSelection();
     sel.collapse(el.firstChild,el.textContent.length);
+    this.scroll(); 
   }
 
   refresh(){
     this.changeDetector.detectChanges();
+    this.scroll();  
   }
 
   showPrompt(): void {
@@ -190,8 +195,10 @@ export class TerminalComponent implements OnInit {
   }
 
   
-  @HostListener('document:keydown') autofocus(){
-    this.setFocus();
+  @HostListener('click') autofocus(){
+    if(this.active){
+      this.setFocus();
+    }    
   }
   
 
@@ -200,6 +207,7 @@ export class TerminalComponent implements OnInit {
       this.historyIndex --;
       this.entry = this.history[this.historyIndex];
       this.moveCursor();
+      this.scroll();
     }
   }
 
@@ -211,6 +219,7 @@ export class TerminalComponent implements OnInit {
       this.entry = '';
     }
     this.moveCursor();
+    this.scroll();
   }
 
   
