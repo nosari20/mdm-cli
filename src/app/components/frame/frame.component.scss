@@ -14,6 +14,7 @@ header{
     background-color: $background-color;
     color: $color;
     display: flex;
+    -webkit-app-region: drag;
 
     .menu-bar{
         height: $header-height;
@@ -28,27 +29,29 @@ header{
             vertical-align: middle;
             position: relative;
             padding: 0 10px;
+            -webkit-app-region: no-drag;
             &:hover {
                 background-color: $background-color-hover;
             } 
             
             &:hover ul.menu-sub{
-                visibility: visible;
+                display: initial;
             }
             
             ul.menu-sub{
                 position: absolute;
                 width: auto;
-                min-width: 300px;;
+                min-width: 200px;;
                 left : 0;
                 top: $header-height;
                 background: rgb(37, 37, 38);
                 box-shadow: rgb(0, 0, 0) 0px 2px 4px;
                 margin: 0;
-                visibility: hidden;
+                display: none;
                 list-style: none;
                 padding: 0;
                 z-index: 1;
+                
 
                 li{
                     padding: 2px 10px;
@@ -79,6 +82,7 @@ header{
             float: right;
             width: $icon-width;
             height: $header-height;
+            -webkit-app-region: no-drag;
             &:hover {
                 background-color: $background-color-hover;
             }

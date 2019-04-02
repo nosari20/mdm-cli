@@ -11,11 +11,14 @@ export class FrameComponent implements OnInit {
   constructor(private _electronService: ElectronService) { }
 
   maximized: boolean;
+  title: string = '';
 
   ngOnInit() {
     let remote : Electron.Remote = this._electronService.remote;
     if(remote == null) return
     this.maximized = remote.getCurrentWindow().isMaximized()
+
+    this.title = remote.getCurrentWindow().getTitle();
   }
 
   close(): void {

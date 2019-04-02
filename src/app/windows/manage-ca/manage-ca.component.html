@@ -1,0 +1,22 @@
+<app-frame>
+
+    <table>
+        <thead>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Certificate</th>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let cert of list">
+                <td>02/01/1996 14:40</td>
+                <td>{{cert.name}}</td>
+                <td><a [href]="'data:application/data;base64,'+btoa(cert) | safeUrl" [download]="cert.name+'.cer'">{{cert.name}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+   
+</app-frame>
+
+

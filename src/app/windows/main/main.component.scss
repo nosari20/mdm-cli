@@ -1,0 +1,120 @@
+$tab-height : 35px;
+$background: rgb(45, 45, 45);
+$background-active : #232323;
+$tab-title-list-background: rgb(37, 37, 38);
+
+
+:host{
+    background: $tab-title-list-background;
+    display: block;
+}
+
+menu{
+    margin: 0;
+    display: inline-block;
+    padding: 0;
+}
+
+.tab-title-list{
+    height: $tab-height;
+    background: $tab-title-list-background;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    &::-webkit-scrollbar {
+        display: none;
+        height: 2px;
+    }
+
+
+    &:hover::-webkit-scrollbar {
+        display: initial;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #ddd;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #666; 
+    }
+
+    .tab-title{
+        display: inline-block;
+        width: 180px;
+        line-height: $tab-height;
+        vertical-align: middle;
+        padding: 0 10px;
+        color: white;
+        border: none;
+        border-right: 1px solid rgb(37, 37, 38);
+        background-color: rgb(45, 45, 45);
+        opacity: .7;
+       
+
+        input{
+            border: none;
+            outline: none;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            vertical-align: middle;
+            width: calc(100% - 30px);
+        }
+
+        &.active{
+            background: $background-active;
+            opacity: 1;
+        }
+
+        i{
+            background: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.428 8L12 10.573 10.572 12 8 9.428 5.428 12 4 10.573 6.572 8 4 5.428 5.427 4 8 6.572 10.573 4 12 5.428 9.428 8z' fill='%23E8E8E8'/%3E%3C/svg%3E") 50% no-repeat;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            padding: 5px;
+            line-height: 20px;
+            vertical-align: middle;
+            visibility: hidden;
+            cursor: pointer;
+        }
+        &:hover, &.active{
+            i{
+                visibility: visible;
+            }
+        }
+    }
+
+    .tab-add{
+        display: inline-block;
+        width: $tab-height;
+        line-height: $tab-height;
+        vertical-align: middle;
+        padding: 0 10px;
+        color: white;
+        border: none;
+        border-right: 1px solid rgb(37, 37, 38);
+        background-color: rgb(45, 45, 45);
+        box-sizing: border-box;
+        opacity: .7;
+        &:hover{
+            opacity: 1;
+        }
+    }
+}
+
+
+.tab-content-list{
+    height: calc(100% - #{$tab-height});
+    .tab-content{
+        height: 0;
+        background: $background;
+        overflow: hidden;
+
+        &.active{
+            height: 100%;
+        }
+    }
+}

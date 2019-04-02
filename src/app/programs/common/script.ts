@@ -15,7 +15,7 @@ export const Script: Program = <Program>{
 
         io.exec(`common:file open`, (res) => {
 
-            if(res.exitCode < 0 && res.result.content){
+            if(res.exitCode > 0 && res.result.content){
                 let path = res.result.fileName.split('/');
 
                 io.out(`Executing ${path[path.length-1]}${io.EOL}${io.EOL}`)
@@ -30,7 +30,7 @@ export const Script: Program = <Program>{
         }, true);       
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${Script.command} &lt;HOST&gt; &lt;PORT&gt; [NAME]${io.EOL}`);
+        io.out(`Usage : ${Script.command}${io.EOL}`);
         io.exit(0);
     },
 }

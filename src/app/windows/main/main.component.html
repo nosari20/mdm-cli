@@ -1,0 +1,40 @@
+<app-frame>
+
+    <menu>
+
+    <div class="menu-bg window-close">
+        File
+
+        <ul class="menu-sub">
+            <li>Clear history</li>
+        </ul>
+    </div>
+    <div class="menu-bg window-close">
+    Customize
+
+        <ul class="menu-sub">
+            <li (click)="open('manage-ca', 'CA Manager')">Manage CA</li>
+        </ul>
+    </div>
+    </menu>
+
+    <div class="tab-title-list">
+        <div class="tab-title" *ngFor="let tab of tabs; let i = index;  trackBy:trackByFn" [ngClass]="{'active': activeTab==i}" (click)="changeTab($event, i)" (dblclick)="edit($event,i)">
+            <input type="text" [(ngModel)]="tabs[i]" [disabled]="editTab!=i">
+            <i (click)="close(i)"></i>
+        </div>
+
+        <div class="tab-add" (click)="add()">
+            <i>+</i>
+        </div>
+    </div> 
+
+
+    <div class="tab-content-list">
+        <div class="tab-content" *ngFor="let tab of tabs; let i = index" [ngClass]="{'active': activeTab==i}">
+            <app-terminal [active]="activeTab==i" [cliName]="tab"></app-terminal>
+        </div>
+    </div>  
+</app-frame>
+
+
