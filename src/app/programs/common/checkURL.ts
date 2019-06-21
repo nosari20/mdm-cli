@@ -5,7 +5,7 @@ import { Program } from '../../types/Program';
 
 export const CheckURL: Program = <Program>{
 
-    command: `common:check_url`,
+    command: `check_url`,
 
     descritpion: `Check url access`,
 

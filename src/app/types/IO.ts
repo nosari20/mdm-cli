@@ -1,6 +1,6 @@
 export interface IO {
     in: (a: (b: string|number )=> void) => void,
-    out: (a: string|number, b?:string) => void,
+    out: (a: any, b?:string) => void,
     exit: (a: number, b?: Result) => void,
     exec: (a: string, b: (c?: Result)=> void, d?:boolean) => void
     EOL: string,

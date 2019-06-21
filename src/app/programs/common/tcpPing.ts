@@ -5,7 +5,7 @@ import { Program } from '../../types/Program';
 
 export const TCPPing: Program = <Program>{
 
-    command: `common:tcp_ping`,
+    command: `tcp_ping`,
 
     descritpion: `TCP Ping`,
 

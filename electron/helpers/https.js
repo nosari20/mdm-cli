@@ -1,16 +1,43 @@
 var https = require('https');
 var http = require('http');
+const tls = require('tls');
+const CA_Store = require('../models/CA_Store');
 
 function get(url, timeout = 5000){
     return request(url, 'GET', timeout);
 }
 
+function pemEncode(str, n) {
+    var ret = [];
+  
+    for (var i = 1; i <= str.length; i++) {
+      ret.push(str[i - 1]);
+      var mod = i % n;
+  
+      if (mod === 0) {
+        ret.push('\n');
+      }
+    }
+  
+    var returnString = `-----BEGIN CERTIFICATE-----\n${ret.join('')}\n-----END CERTIFICATE-----`;
+  
+    return returnString;
+  }
+
 
 function params(method, options){
+    const secureContext = tls.createSecureContext();
+    let CAs = CA_Store.list();
+    for (let index = 0; index < CAs.length; index++) {
+      const cert = CAs[index];
+      secureContext.context.addCACert(cert.pemEncoded);
+      
+    }
     let params = {
         method: method,
         rejectUnauthorized: false,
-        headers: {}
+        secureContext: secureContext,
+        headers: {},
     };
 
     if(options){
@@ -46,7 +73,11 @@ function request(url, method, options, timeout = 5000,){
                     resolve({
                         headers : res.headers,
                         statusCode:  res.statusCode,
-                        body: response_data
+                        body: response_data,
+                        certificate: (url.startsWith('https://') ? {
+                            authorized : res.socket.authorized,
+                            pemEncoded : pemEncode(res.socket.getPeerCertificate().raw.toString('base64'), 64)
+                        } : false)
                     }); 
                 });
                 

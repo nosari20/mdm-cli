@@ -20,7 +20,6 @@ export class WindowManagerService {
       frame: false,
       transparent: false
     });
-    win.webContents.openDevTools();
     win.loadURL('file://' + __dirname + '/index.html#'+window);
   }
 }

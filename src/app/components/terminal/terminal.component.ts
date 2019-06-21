@@ -244,9 +244,15 @@ export class TerminalComponent implements OnInit {
     this.refresh();
   }  
 
-  out(string: string|number, style: string = null) : void {
+  out(obj: any, style: string = null) : void {
     if(this.quiet) return;
-    this.session[this.session.length - 1].result += ('<span '+(style?'style="'+style+'"':'')+'>'+string+'</span>');
+    var type = typeof obj;
+    if(type === 'function'){
+      obj = obj.toString();
+    }else if('object'){
+      obj = JSON.stringify(obj, null, 4);
+    }
+    this.session[this.session.length - 1].result += ('<span '+(style?'style="'+style+'"':'')+'>'+obj+'</span>');
     this.refresh();
   }
 

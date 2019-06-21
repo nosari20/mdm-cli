@@ -27,7 +27,11 @@ export const Core: Program = <Program>{
                 io.out(io.EOL);
                 io.out(`Acess Control :${io.EOL}`);
                 io.exec(`${Core.command} ${host} ac`,() => {
-                    io.exit(0);
+                    io.out(io.EOL);
+                    io.out(`Status :${io.EOL}`);
+                    io.exec(`${Core.command} ${host} status`,() => {
+                        io.exit(0);
+                    });
                 });
             });
             return;
@@ -36,18 +40,18 @@ export const Core: Program = <Program>{
         
 
         if(args[1] == `cert`){            
-            io.exec(`common:check_cert ${host} 443 "HTTPS SSL"`,  () => {
-                io.exec(`common:check_cert ${host} 9997 "CLIENT TLS"`,  () => {
+            io.exec(`check_cert ${host} 443 "HTTPS SSL"`,  () => {
+                io.exec(`check_cert ${host} 9997 "CLIENT TLS"`,  () => {
                     io.exit(0);           
                 });           
             });           
             return;
         }
 
-        if(args[1] == "ac"){
-            io.exec(`common:check_url https://${host}/mifs/admin/vsp.html "Admin Portal"`, () => {
-                io.exec(`common:check_url https://${host}/mifs/user "User Portal"`, () => {
-                    io.exec(`common:check_url https://${host}:8443/mics "System Manager"`, () => {
+        if(args[1] == `ac`){
+            io.exec(`check_url https://${host}/mifs/admin/vsp.html "Admin Portal"`, () => {
+                io.exec(`check_url https://${host}/mifs/user/index.html "User Portal"`, () => {
+                    io.exec(`check_url https://${host}:8443/mics "System Manager"`, () => {
                         io.exit(0);
                     });
                 });
@@ -55,9 +59,25 @@ export const Core: Program = <Program>{
             return;
         }
 
+        
 
-
-
+        if(args[1] == `status`){
+            io.exec(`http GET https://${host}/status/status.html"`, (res) => {
+                if(res.exitCode == -1){
+                    io.out(`Error ${res.result.syscall} ${res.result.errno}  ${io.EOL}`, `color: red`)
+                    return io.exit(-1)
+                }else{
+                    if(res.result.statusCode  != 200){
+                        io.out(`HTTP ${res.result.statusCode}${io.EOL}`, `color: orangered`)
+                        return io.exit(-1)
+                    }else{
+                        io.out(`${res.result.body} ${io.EOL}`)
+                        return io.exit(0);
+                    }                    
+                }
+            }, true);            
+            return;
+        }
 
 
 
@@ -71,7 +91,7 @@ export const Core: Program = <Program>{
     },
 
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${Core.command} <HOST> [cert | ac]${io.EOL}`);
+        io.out(`Usage : ${Core.command} <HOST> [cert | ac | status]${io.EOL}`);
         io.exit(0);
     },
     

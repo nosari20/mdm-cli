@@ -36,14 +36,14 @@ export const Sentry: Program = <Program>{
         
 
         if(args[1] == `cert`){          
-            io.exec(`common:check_cert ${host} 443 "HTTPS SSL"`,  () => {
+            io.exec(`check_cert ${host} 443 "HTTPS SSL"`,  () => {
                 io.exit(0);
             });           
             return;
         }
 
         if(args[1] == `ac`){
-            io.exec(`common:check_url https://${host}:8443/mics "System Manager"`,  () => {
+            io.exec(`check_url https://${host}:8443/mics "System Manager"`,  () => {
                 io.exit(0);
             });            
             return;

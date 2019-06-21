@@ -5,7 +5,7 @@ import { Program } from '../../types/Program';
 
 export const File: Program = <Program>{
 
-    command: `common:file`,
+    command: `file`,
 
     descritpion: `File read/write`,
 

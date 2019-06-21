@@ -6,14 +6,14 @@ import { Program } from '../../types/Program';
 
 export const Script: Program = <Program>{
 
-    command: `common:script`,
+    command: `script`,
 
     descritpion: `Run external script`,
 
     main : (io: IO, args: string[]) => {
 
 
-        io.exec(`common:file open`, (res) => {
+        io.exec(`file open`, (res) => {
 
             if(res.exitCode > 0 && res.result.content){
                 let path = res.result.fileName.split('/');

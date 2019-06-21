@@ -1,5 +1,6 @@
 import { Component, HostListener, ElementRef } from '@angular/core';
 import { WindowManagerService } from '../../services/window-manager.service'
+import {ElectronService} from 'ngx-electron';
 
 @Component({
   selector: 'app-main',
@@ -14,7 +15,7 @@ export class MainComponent {
   editTab: number = -1;
 
 
-  constructor(private _windowManager: WindowManagerService, private element: ElementRef) {}
+  constructor(private _electronService: ElectronService, private _windowManager: WindowManagerService, private element: ElementRef) {}
 
   changeTab(event, tab: number): void {
     event.stopPropagation();
@@ -37,7 +38,7 @@ export class MainComponent {
    
   }
 
-  trackByFn(index: any, item: any) {
+  trackByFn(index: any, item: any) : number {
     return index;
  }
 
@@ -50,7 +51,7 @@ export class MainComponent {
  }
 
 
- @HostListener('document:click', ["$event"]) clickOut(event){
+ @HostListener('document:click', ["$event"]) clickOut(event) : void{
     if(event.srcElement != this.element){
       this.editTab = -1;
     }
@@ -58,5 +59,10 @@ export class MainComponent {
 
   open(window: string, title: string) : void{
     this._windowManager.open(window, {title: title});
+  }
+
+  openDevTool() : void{
+    let win : any = this._electronService.remote;
+    win.getCurrentWindow().openDevTools();
   }
 }

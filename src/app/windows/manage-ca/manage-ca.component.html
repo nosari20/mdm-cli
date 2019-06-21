@@ -2,20 +2,27 @@
 
     <table>
         <thead>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Certificate</th>
+            <th>Valid From</th>
+            <th>Valid Until</th>
+            <th>Issuer</th>
+            <th>Object</th>
+            <th>Download</th>
+            <th></th>
 
         </thead>
         <tbody>
             <tr *ngFor="let cert of list">
-                <td>02/01/1996 14:40</td>
-                <td>{{cert.name}}</td>
-                <td><a [href]="'data:application/data;base64,'+btoa(cert) | safeUrl" [download]="cert.name+'.cer'">{{cert.name}}</a></td>
+                <td>{{cert.validFrom}}</td>
+                <td>{{cert.validUntil}}</td>
+                <td>{{cert.issuer.cn}}</td>
+                <td><span *ngFor="let subject of cert.subjects">{{subject.cn}}&nbsp;</span></td>
+                <td><a [href]="'data:application/data;base64,'+btoa(cert.pemEncoded) | safeUrl" [download]="cert.subjects[0].cn+'.cer'">Download</a></td>
+                <td><button  class="delete" (click)="deleteCAClick(cert.id)"><i></i></button></td>
             </tr>
         </tbody>
     </table>
 
+    <button class="add" (click)="addCAClick()">+</button>
    
 </app-frame>
 

@@ -14,33 +14,33 @@ module.exports =  {
 
  
     name : 'CA',
-    data : (Object.getOwnPropertyNames(store.get(this.name)).length > 0 ? store.get(this.name) : []), //
+    data : (Object.getOwnPropertyNames(store.get(this.name)).length > 0 ? store.get(this.name) : {CA:[]}), //
 
     add(ca){
-        this.data.push(ca);
+        this.data.CA.push(ca);
         return this.save();
     },
 
-    remove(ca){
-        this.data = this.data.filter(d => d !== ca);
+    remove(id){
+        this.data.CA = this.data.CA.filter(d => d.id !== id);
         return this.save();
     },
 
     list(){
-        return this.data;
+        return this.data.CA;
     },
 
     findById(id){
-        return this.data.filter(d => d.id == id);
+        return this.data.CA.filter(d => d.id == id);
     },
 
     save(){
-        store.set(this.name, this.data);
+        store.set(this.name, this.data.CA);
         return true;
     },
 
     empty(){
-        this.data = [];
+        this.data = {CA:[]};
         return this.save();
     }
 

@@ -1,4 +1,5 @@
 const tls = require('tls');
+const CA_Store = require('../models/CA_Store');
 
 function check(host, port, timeout = 5000){
 
@@ -22,7 +23,15 @@ function check(host, port, timeout = 5000){
       }
 
     return new Promise(function(resolve, reject) {
-        var socket = tls.connect(port, host, {rejectUnauthorized: false}, () => {
+        const secureContext = tls.createSecureContext();
+        let CAs = CA_Store.list();
+        for (let index = 0; index < CAs.length; index++) {
+          const cert = CAs[index];
+          secureContext.context.addCACert(cert.pemEncoded);
+          
+        }
+
+        var socket = tls.connect(port, host, {rejectUnauthorized: false, secureContext: secureContext}, () => {
             let certificate = socket.getPeerCertificate();
             certificate.authorized = socket.authorized;
             certificate.pemEncoded = pemEncode(certificate.raw.toString('base64'), 64);

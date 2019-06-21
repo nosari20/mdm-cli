@@ -5,7 +5,7 @@ import { Program } from '../../types/Program';
 
 export const HTTP: Program = <Program>{
 
-    command: `common:http`,
+    command: `http`,
 
     descritpion: `HTTP requests`,
 
@@ -70,7 +70,11 @@ export const HTTP: Program = <Program>{
             }
 
             io.out(`HTTP ${res.statusCode}${io.EOL}`);
-            
+
+            if(url.startsWith('https://')){
+                io.out(`SSL Authorized : ${res.certificate.authorized} <a href="data:application/data;base64,${window.btoa(res.certificate.pemEncoded)}" download="${'cert'}.cer">Download</a>${io.EOL}`);
+            }
+
             if(res.body){
                 io.out(`Body : ${io.EOL}<iframe style="background: white;width: calc(100% - 10px);height: 50vh;" srcdoc="${res.body.replace(/"/g,"'").replace('/(<head>)|(<HEAD>)/',`<head><base href='${url.split("/")[0]}//${url.split("/")[2]}'>`).replace(/(<\/body>)|(<\/BODY>)/,'<div style=\'position:absolute;top:0;bottom:0;right:0;left:0\'></div></body>')}"></iframe>${io.EOL}`);
             }
