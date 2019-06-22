@@ -1,23 +1,22 @@
 <app-frame>
 
     <menu>
-
-    <div class="menu-bg window-close">
+        <div class="menu-bg window-close">
         File
 
-        <ul class="menu-sub">
-            <li>Clear history</li>
-        </ul>
-    </div>
-    <div class="menu-bg window-close">
-    Customize
+            <ul class="menu-sub">
+                <li (click)="deleteHistory()">Delete history</li>
+            </ul>
+        </div>
+        <div class="menu-bg window-close">
+        Customize
 
-        <ul class="menu-sub">
-            <li (click)="open('manage-ca', 'CA Manager')">Manage CA</li>
-        </ul>
-    </div>
-    <div class="menu-bg window-close">
-        Debug
+            <ul class="menu-sub">
+                <li (click)="open('manage-ca', 'CA Manager')">Manage CA</li>
+            </ul>
+        </div>
+        <div class="menu-bg window-close">
+            Debug
     
             <ul class="menu-sub">
                 <li (click)="openDevTool()">Open dev tool</li>
@@ -39,7 +38,7 @@
 
     <div class="tab-content-list">
         <div class="tab-content" *ngFor="let tab of tabs; let i = index" [ngClass]="{'active': activeTab==i}">
-            <app-terminal [active]="activeTab==i" [cliName]="tab"></app-terminal>
+            <app-terminal #terminal [active]="activeTab==i" [cliName]="tab"></app-terminal>
         </div>
     </div>  
 </app-frame>

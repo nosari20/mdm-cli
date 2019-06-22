@@ -1,6 +1,7 @@
-import { Component, HostListener, ElementRef } from '@angular/core';
+import { Component, HostListener, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { WindowManagerService } from '../../services/window-manager.service'
 import {ElectronService} from 'ngx-electron';
+import { TerminalComponent } from 'src/app/components/terminal/terminal.component';
 
 @Component({
   selector: 'app-main',
@@ -13,6 +14,8 @@ export class MainComponent {
   tabs: string[] = ['Terminal 0'];
   activeTab: number = 0;
   editTab: number = -1;
+
+  @ViewChildren(TerminalComponent) terminals !: QueryList<TerminalComponent>;
 
 
   constructor(private _electronService: ElectronService, private _windowManager: WindowManagerService, private element: ElementRef) {}
@@ -57,12 +60,21 @@ export class MainComponent {
     }
   }
 
-  open(window: string, title: string) : void{
+  open(window: string, title: string) : void {
     this._windowManager.open(window, {title: title});
   }
 
-  openDevTool() : void{
+
+  openDevTool() : void {
     let win : any = this._electronService.remote;
     win.getCurrentWindow().openDevTools();
   }
+
+  deleteHistory(): void {
+    this.terminals.forEach(terminal => {
+      terminal.deleteHistory();
+    });
+  }
+
+  
 }

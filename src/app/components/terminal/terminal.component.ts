@@ -112,9 +112,7 @@ export class TerminalComponent implements OnInit {
   execute(entry: string): void {
     this.hidePrompt();
     this.addHistory(new String(entry).toString());    
-    let input = this.sanitizeEntry(entry);
-    
-    
+    let input = this.sanitizeEntry(entry);    
     this.session.push(this.createCommandObject(input));
 
     setTimeout(function(){
@@ -180,6 +178,7 @@ export class TerminalComponent implements OnInit {
       EOL: this.newLine(),
       exit: this.exit.bind(this),
       exec: this.exec.bind(this),
+      clear: this.clear.bind(this)
     }
   }
 
@@ -193,6 +192,12 @@ export class TerminalComponent implements OnInit {
     this.historyIndex = this.history.length;
     localStorage.setItem('history',JSON.stringify(this.history));
   }
+
+  deleteHistory() : void {
+    localStorage.setItem('history',JSON.stringify([]));
+    this.loadHistory();
+  }
+ 
 
   
   @HostListener('click') autofocus(){
@@ -249,7 +254,7 @@ export class TerminalComponent implements OnInit {
     var type = typeof obj;
     if(type === 'function'){
       obj = obj.toString();
-    }else if('object'){
+    }else if(type === 'object'){
       obj = JSON.stringify(obj, null, 4);
     }
     this.session[this.session.length - 1].result += ('<span '+(style?'style="'+style+'"':'')+'>'+obj+'</span>');
@@ -262,6 +267,7 @@ export class TerminalComponent implements OnInit {
 
   exit(code: number, result?: any) : void {
     if(this.stack == 0){
+      if(this.session.length > 0)
       this.session[this.session.length - 1].exit = code
       this.session = Object.assign([], this.session);
       this.resetPrompt();
@@ -287,6 +293,15 @@ export class TerminalComponent implements OnInit {
     this.quiet = quiet;
     this.execCallBacks.push(callBack);
     this.engine.execute(this.process, this.createCommandObject(this.sanitizeEntry(entry)));
+  }
+
+  clear(line: number = 0): void {
+    if(line > 0){
+      this.session = this.session.slice(0, -line);
+    }else{
+      this.session = [];
+    }    
+    this.refresh();
   }
   
 }

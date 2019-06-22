@@ -54,7 +54,6 @@ export const CheckCert: Program = <Program>{
             let validity: Date = new Date (certificate.valid_to);
             let time_left = Math.ceil((validity.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24));
             time_left = (time_left > 0 ? time_left : 0);
-            console.log(certificate);
             if(certificate.authorized){
                 io.out(`OK`,`color:green`)                        
             }else{
