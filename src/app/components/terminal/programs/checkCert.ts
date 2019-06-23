@@ -1,6 +1,6 @@
-import { IO } from '../../types/IO';
+import { IO } from '../types/IO';
 import {ElectronService} from 'ngx-electron';
-import { Program } from '../../types/Program';
+import { Program } from '../types/Program';
 
 
 export const CheckCert: Program = <Program>{
@@ -12,7 +12,7 @@ export const CheckCert: Program = <Program>{
     main : (io: IO, args: string[]) => {
 
         if(args.length < 2){
-            io.out(`Not enough args ${io.EOL}`);
+            io.printerr(`Not enough args`);
             io.exec(`${CheckCert.command} help`, () =>{
                 io.exit(-1);
             });
@@ -22,7 +22,7 @@ export const CheckCert: Program = <Program>{
         const host = args[0];
         const port = parseInt(args[1]);
         if(isNaN(port)){
-            io.out(`Port is not a number`,`color:red`);
+            io.printerr(`Port is not a number`);
             return io.exit(-1);
         }
 
@@ -40,12 +40,12 @@ export const CheckCert: Program = <Program>{
             ipc.removeListener(`ssl`,onCertReceive);
             let res = JSON.parse(resJSON);
             let name = (args[2] ? args[2] : `${host}:${port}`)
-            io.out(`${name} : `); 
+            io.println(`${name} : `); 
             if(res.errno){
                 if(res.code == `ETIMEDOUT`){
-                    io.out(`Not reachable (${res.code})${io.EOL}`,`color:red`)
+                    io.printerr(`Not reachable (${res.code})`)
                 }else{
-                    io.out(`Error ${res.syscall} : ${res.code+io.EOL}`, `color:red`);
+                    io.printerr(`Error ${res.syscall} : ${res.code}`,);
                 }
                 return io.exit(-1, res);
             }
@@ -55,21 +55,21 @@ export const CheckCert: Program = <Program>{
             let time_left = Math.ceil((validity.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24));
             time_left = (time_left > 0 ? time_left : 0);
             if(certificate.authorized){
-                io.out(`OK`,`color:green`)                        
+                io.println(`OK`,`color:green`)                        
             }else{
-                io.out(`KO`,`color:red`);
+                io.println(`KO`,`color:red`);
             }
-            io.out(` <a href="data:application/data;base64,${window.btoa(certificate.pemEncoded)}" download="${host}_${name}.cer">Download</a>`);
+            io.println(` <a href="data:application/data;base64,${window.btoa(certificate.pemEncoded)}" download="${host}_${name}.cer">Download</a>`);
             if(time_left < 60){
-                io.out(` (${time_left} days left)`, `color:orangered`);
+                io.println(` (${time_left} days left)`, `color:orangered`);
             }
-            io.out(io.EOL);
+            io.println(io.EOL);
             return io.exit(0, res);
         }
         ipc.on(`ssl`, onCertReceive);
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${CheckCert.command} &lt;HOST&gt; &lt;PORT&gt; [NAME]${io.EOL}`);
+        io.println(`Usage : ${CheckCert.command} &lt;HOST&gt; &lt;PORT&gt; [NAME]${io.EOL}`);
         io.exit(0);
     },
 }

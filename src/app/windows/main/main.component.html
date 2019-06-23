@@ -38,7 +38,7 @@
 
     <div class="tab-content-list">
         <div class="tab-content" *ngFor="let tab of tabs; let i = index" [ngClass]="{'active': activeTab==i}">
-            <app-terminal #terminal [active]="activeTab==i" [cliName]="tab"></app-terminal>
+            <app-terminal #terminal [active]="activeTab==i" [cliName]="tab" [addOns]="programs"></app-terminal>
         </div>
     </div>  
 </app-frame>

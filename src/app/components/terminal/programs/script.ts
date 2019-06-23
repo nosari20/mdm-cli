@@ -1,7 +1,5 @@
-import { IO } from '../../types/IO';
-import {ElectronService} from 'ngx-electron';
-import { Program } from '../../types/Program';
-//var fs = require('fs');
+import { IO } from '../types/IO';
+import { Program } from '../types/Program';
 
 
 export const Script: Program = <Program>{
@@ -14,23 +12,22 @@ export const Script: Program = <Program>{
 
 
         io.exec(`file open`, (res) => {
-
-            if(res.exitCode > 0 && res.result.content){
+            if(res.exitCode >= 0 && res.result.content){
                 let path = res.result.fileName.split('/');
 
-                io.out(`Executing ${path[path.length-1]}${io.EOL}${io.EOL}`)
+                io.println(`Executing ${path[path.length-1]}${io.EOL}${io.EOL}`)
                 let f=new Function(`io`,res.result.content);
                 f(io);
                 return;
             }else{
-                io.out(`Cannot read file`,`color: red`);
+                io.printerr(`Cannot read file`);
                 return io.exit(-1);
             }
 
         }, true);       
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${Script.command}${io.EOL}`);
+        io.println(`Usage : ${Script.command}${io.EOL}`);
         io.exit(0);
     },
 }

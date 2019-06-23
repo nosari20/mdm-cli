@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 
 import { AppComponent } from './app.component';
 import { TerminalComponent } from './components/terminal/terminal.component';
-import { EngineService } from './services/engine.service';
+import { EngineService } from './components/terminal/services/engine.service';
 import { FrameComponent } from './components/frame/frame.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { MainComponent } from './windows/main/main.component';

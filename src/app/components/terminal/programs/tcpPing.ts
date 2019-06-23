@@ -1,6 +1,6 @@
-import { IO } from '../../types/IO';
+import { IO } from '../types/IO';
 import {ElectronService} from 'ngx-electron';
-import { Program } from '../../types/Program';
+import { Program } from '../types/Program';
 
 
 export const TCPPing: Program = <Program>{
@@ -12,7 +12,7 @@ export const TCPPing: Program = <Program>{
     main : (io: IO, args: string[]) => {
 
         if(args.length < 2){
-            io.out(`Not enough args ${io.EOL}`);
+            io.printerr(`Not enough args`);
             io.exec(`${TCPPing.command} help`, () =>{
                 io.exit(-1);
             });
@@ -22,7 +22,7 @@ export const TCPPing: Program = <Program>{
         const host = args[0];
         const port = parseInt(args[1]);
         if(isNaN(port)){
-            io.out(`Port is not a number`,`color:red`);
+            io.printerr(`Port is not a number`);
             return io.exit(-1);
         }
 
@@ -39,24 +39,24 @@ export const TCPPing: Program = <Program>{
         const onRespReceive = function (event, resJSON) {
             ipc.removeListener(`tcp_ping`,onRespReceive);
             let res = JSON.parse(resJSON);
-            let name = (args[2] ? args[2] : `${host}:${port}`)
+            let name = (args[2] ? args[2] : `${host}:${port}`);
             if(res.errno){
                 if(res.code == `ETIMEDOUT`){
-                    io.out(`${name} not reachable (${res.code})${io.EOL}`,`color:red`)
+                    io.printerr(`${name} not reachable (${res.code})`);
                 }else{
-                    io.out(`${name} : Error ${res.syscall} : ${res.code+io.EOL}`, `color:red`);
+                    io.printerr(`${name} : Error ${res.syscall} : ${res.code}`);
                 }
                 return io.exit(-1, res);
             }
 
-            io.out(`${name} reachable (time: ${res.time})${io.EOL}`);   
+            io.println(`${name} reachable (time: ${res.time})${io.EOL}`);   
             
             return io.exit(0, res);
         }
         ipc.on(`tcp_ping`, onRespReceive);
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${TCPPing.command} &lt;HOST&gt; &lt;PORT&gt; [NAME]${io.EOL}`);
+        io.println(`Usage : ${TCPPing.command} &lt;HOST&gt; &lt;PORT&gt; [NAME]${io.EOL}`);
         io.exit(0);
     },
 }

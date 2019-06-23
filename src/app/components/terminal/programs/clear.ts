@@ -1,5 +1,5 @@
-import { IO } from '../../types/IO';
-import { Program } from '../../types/Program';
+import { IO } from '../types/IO';
+import { Program } from '../types/Program';
 
 
 export const Clear: Program = <Program>{
@@ -14,7 +14,7 @@ export const Clear: Program = <Program>{
         
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${Clear.command}${io.EOL}`);
+        io.println(`Usage : ${Clear.command}${io.EOL}`);
         io.exit(0);
     },
 }

@@ -1,24 +1,35 @@
-import { Component, HostListener, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { WindowManagerService } from '../../services/window-manager.service'
 import {ElectronService} from 'ngx-electron';
 import { TerminalComponent } from 'src/app/components/terminal/terminal.component';
+import { ProgramList } from 'src/app/components/terminal/types/ProgramList';
+import { Core } from '../../programs/MI/Core';
+import { Sentry } from 'src/app/programs/MI/Sentry';
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   title = 'cli';
 
   tabs: string[] = ['Terminal 0'];
   activeTab: number = 0;
   editTab: number = -1;
+  programs:  ProgramList[] = [];
 
   @ViewChildren(TerminalComponent) terminals !: QueryList<TerminalComponent>;
 
 
   constructor(private _electronService: ElectronService, private _windowManager: WindowManagerService, private element: ElementRef) {}
+
+  ngOnInit() {
+    this.programs.push(<ProgramList>{
+      category:  'MobileIron',
+      programs: [Core,Sentry]
+    });
+  }
 
   changeTab(event, tab: number): void {
     event.stopPropagation();

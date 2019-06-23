@@ -1,6 +1,6 @@
- <div *ngFor="let command of session">
-    <div><pre><span class="dollar">{{cliName}}&gt; </span><span class="entry">{{command.raw}}</span></pre></div>
-    <div [ngClass]="{'error': (command.exit != 0)}"><pre [innerHTML]="command.result | safeHtml"></pre></div>
+<div *ngFor="let line of lines">
+    <div *ngIf="line.type=='entry'"><pre><span class="dollar">{{cliName}}&gt; </span><span class="entry">{{line.text }}</span></pre></div>
+    <div *ngIf="line.type=='normal'"><pre [innerHTML]="line.text | safeHtml"></pre></div>
 </div>
 
 <div class="prompt line" *ngIf="prompt || waitForEntry"><pre><span *ngIf="prompt" class="dollar">{{cliName}}&gt; </span><span autofocus [textContent]="entry" (input)="entry=$event.target.textContent.split(' ').join(' ')" contenteditable="true" class="entry" #input (keyup.enter)="enter($event)" (keyup.ArrowUp)="keyUp($event)" (keyup.ArrowDown)="keyDown($event)"></span></pre></div>

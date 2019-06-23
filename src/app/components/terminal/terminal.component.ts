@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, ChangeDetectorRef, Input } from '@angular/core';
-import { Command } from '../../types/Command'
-import {EngineService } from '../../services/engine.service'
-import { IO, Result } from '../../types/IO';
+import { Command } from './types/Command'
+import {EngineService } from './services/engine.service'
+import { IO, Result } from './types/IO';
+import { ProgramList } from './types/ProgramList';
+import { Line } from './types/Line';
 
 @Component({
   selector: 'app-terminal',
@@ -11,6 +13,7 @@ import { IO, Result } from '../../types/IO';
 export class TerminalComponent implements OnInit {
 
   @Input() cliName: string = 'cli';
+  @Input() addOns: ProgramList[] = [];
   @Input() active: boolean = true;;
   prompt: boolean = true;
   entry: string = '';
@@ -23,6 +26,7 @@ export class TerminalComponent implements OnInit {
   historyIndex: number;
   quiet: boolean = false;
   process: IO;
+  lines : Line[] = [];
   
 
   
@@ -32,6 +36,7 @@ export class TerminalComponent implements OnInit {
 
   ngOnInit() {
     this.loadHistory();
+    this.engine.init(this.addOns);
   }
 
 
@@ -42,7 +47,6 @@ export class TerminalComponent implements OnInit {
 
     } 
   }
-
 
   setFocus() { 
     if(this.prompt || this.waitForEntry)
@@ -115,6 +119,11 @@ export class TerminalComponent implements OnInit {
     let input = this.sanitizeEntry(entry);    
     this.session.push(this.createCommandObject(input));
 
+    this.lines.push(<Line>{
+      type:'entry',
+      text: input,
+    })
+
     setTimeout(function(){
       this.process = this.createIO();
       this.engine.execute(this.process, this.session[this.session.length - 1]);
@@ -128,7 +137,6 @@ export class TerminalComponent implements OnInit {
       command: command,
       args: args.args,
       options: args.options,
-      result: '',
       exit: 0,
       raw: string
     }
@@ -175,6 +183,9 @@ export class TerminalComponent implements OnInit {
     return <IO> {
       in: this.in.bind(this),
       out: this.out.bind(this),
+      print: this.print.bind(this),
+      println: this.println.bind(this),
+      printerr: this.printerr.bind(this),
       EOL: this.newLine(),
       exit: this.exit.bind(this),
       exec: this.exec.bind(this),
@@ -249,7 +260,7 @@ export class TerminalComponent implements OnInit {
     this.refresh();
   }  
 
-  out(obj: any, style: string = null) : void {
+  out(obj: any, style: string = null, newLine = false) : void {
     if(this.quiet) return;
     var type = typeof obj;
     if(type === 'function'){
@@ -257,8 +268,38 @@ export class TerminalComponent implements OnInit {
     }else if(type === 'object'){
       obj = JSON.stringify(obj, null, 4);
     }
-    this.session[this.session.length - 1].result += ('<span '+(style?'style="'+style+'"':'')+'>'+obj+'</span>');
+
+    let content = ('<span '+(style?'style="'+style+'"':'')+'>'+obj+'</span>');
+
+    if(newLine){
+      this.lines.push(<Line>{
+        type:'normal',
+        text: content,
+      })
+    }else{
+      if(this.lines.length == 0){
+        this.lines.push(<Line>{
+          type:'normal',
+          text: '',
+        })
+      }
+      this.lines[this.lines.length-1].text += content;
+    }
+
+  
     this.refresh();
+  }
+
+  print(obj: any,style: string = null){
+    this.out(obj, style, false);
+  }
+
+  println(obj: any,style: string = null){
+    this.out(obj, style, true);
+  }
+
+  printerr(obj: any){
+    this.println(obj, 'color:red');
   }
 
   newLine() : string {
@@ -297,9 +338,9 @@ export class TerminalComponent implements OnInit {
 
   clear(line: number = 0): void {
     if(line > 0){
-      this.session = this.session.slice(0, -line);
+      this.lines = this.lines.slice(0, -line);
     }else{
-      this.session = [];
+      this.lines = [];
     }    
     this.refresh();
   }

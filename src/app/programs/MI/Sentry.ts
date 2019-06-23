@@ -1,5 +1,5 @@
-import { IO } from '../../types/IO';
-import { Program } from '../../types/Program';
+import { IO } from '../../components/terminal/types/IO';
+import { Program } from '../../components/terminal/types/Program';
 
 
 
@@ -11,7 +11,7 @@ export const Sentry: Program = <Program>{
 
     main : (io: IO, args: string[]) => {
         if(args.length < 1){
-            io.out(`Not enough args${io.EOL}`);
+            io.printerr(`Not enough args${io.EOL}`);
             io.exec(Sentry.command + ` help`, () =>{
                 io.exit(-1);
             });
@@ -19,13 +19,14 @@ export const Sentry: Program = <Program>{
         }
 
         let host = args[0]; 
+    
         
         if(args.length == 1){
-            io.out(`Tests for ${host} : ${io.EOL+io.EOL}`);
-            io.out(`Certificates :${io.EOL}`);
+            io.println(`Tests for ${host} : ${io.EOL+io.EOL}`);
+            io.println(`Certificates :${io.EOL}`);
             io.exec(`${Sentry.command} ${host} cert`,() => {
-                io.out(io.EOL);
-                io.out(`Acess Control :${io.EOL}`);
+                io.println(io.EOL);
+                io.println(`Acess Control :${io.EOL}`);
                 io.exec(`${Sentry.command} ${host} ac`,() => {
                     io.exit(0);
                 });
@@ -50,7 +51,7 @@ export const Sentry: Program = <Program>{
         }
 
 
-        io.out(`Wrong argument`+io.EOL);
+        io.printerr(`Wrong argument`+io.EOL);
         io.exec( `${Sentry.command} help`, () =>{
             io.exit(-1);
         });
@@ -59,7 +60,7 @@ export const Sentry: Program = <Program>{
     },
 
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${Sentry.command} <HOST> [cert | ac]${io.EOL}`);
+        io.println(`Usage : ${Sentry.command} <HOST> [cert | ac]${io.EOL}`);
         io.exit(0);
     },  
 }

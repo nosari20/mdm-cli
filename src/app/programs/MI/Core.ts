@@ -1,5 +1,5 @@
-import { IO } from '../../types/IO';
-import { Program } from '../../types/Program';
+import { IO } from '../../components/terminal/types/IO';
+import { Program } from '../../components/terminal/types/Program';
 
 
 
@@ -11,7 +11,7 @@ export const Core: Program = <Program>{
 
     main : (io: IO, args: string[]) => {
         if(args.length < 1){
-            io.out(`Not enough args${io.EOL}`);
+            io.printerr(`Not enough args`);
             io.exec(`${Core.command} help`, () =>{
                 io.exit(-1);
             });
@@ -19,16 +19,18 @@ export const Core: Program = <Program>{
         }
 
         let host = args[0]; 
+
+        console.log( host);
         
         if(args.length == 1){
-            io.out(`Tests for ${host} : ${io.EOL+io.EOL}`);
-            io.out(`Certificates :${io.EOL}`);
+            io.println(`Tests for ${host} : ${io.EOL}`);
+            io.println(`Certificates :`);
             io.exec(`${Core.command} ${host} cert`,() => {
-                io.out(io.EOL);
-                io.out(`Acess Control :${io.EOL}`);
+                io.println(io.EOL);
+                io.println(`Acess Control :`);
                 io.exec(`${Core.command} ${host} ac`,() => {
-                    io.out(io.EOL);
-                    io.out(`Status :${io.EOL}`);
+                    io.println(io.EOL);
+                    io.println(`Status :`);
                     io.exec(`${Core.command} ${host} status`,() => {
                         io.exit(0);
                     });
@@ -64,14 +66,14 @@ export const Core: Program = <Program>{
         if(args[1] == `status`){
             io.exec(`http GET https://${host}/status/status.html"`, (res) => {
                 if(res.exitCode == -1){
-                    io.out(`Error ${res.result.syscall} ${res.result.errno}  ${io.EOL}`, `color: red`)
+                    io.printerr(`Error ${res.result.syscall} ${res.result.errno}`)
                     return io.exit(-1)
                 }else{
                     if(res.result.statusCode  != 200){
-                        io.out(`HTTP ${res.result.statusCode}${io.EOL}`, `color: orangered`)
+                        io.printerr(`HTTP ${res.result.statusCode}`);
                         return io.exit(-1)
                     }else{
-                        io.out(`${res.result.body} ${io.EOL}`)
+                        io.println(`${res.result.body}`);
                         return io.exit(0);
                     }                    
                 }
@@ -82,7 +84,7 @@ export const Core: Program = <Program>{
 
 
 
-        io.out(`Wrong argument`+io.EOL);
+        io.printerr(`Wrong argument`+io.EOL);
         io.exec( `${Core.command} help`, () =>{
             io.exit(-1);
         });
@@ -91,7 +93,7 @@ export const Core: Program = <Program>{
     },
 
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${Core.command} <HOST> [cert | ac | status]${io.EOL}`);
+        io.println(`Usage : ${Core.command} <HOST> [cert | ac | status]${io.EOL}`);
         io.exit(0);
     },
     

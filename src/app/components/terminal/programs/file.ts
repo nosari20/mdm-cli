@@ -1,6 +1,6 @@
-import { IO } from '../../types/IO';
+import { IO } from '../types/IO';
 import {ElectronService} from 'ngx-electron';
-import { Program } from '../../types/Program';
+import { Program } from '../types/Program';
 
 
 export const File: Program = <Program>{
@@ -30,11 +30,11 @@ export const File: Program = <Program>{
                 ipc.removeListener(`file-read`,onRespReceive);
                 let res = JSON.parse(resJSON);
 
-                if(res.content){
-                    io.out(res.content);
+                if(typeof res.content == `string`){
+                    io.println(res.content);
                     return io.exit(0, res);
                 }else{
-                    io.out(`Cannot read file`,`color: red`);
+                    io.printerr(`Cannot read file`);
                     return io.exit(-1);
                 }
                
@@ -45,7 +45,7 @@ export const File: Program = <Program>{
        
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${File.command} &lt;open&gt;${io.EOL}`);
+        io.println(`Usage : ${File.command} &lt;open&gt;${io.EOL}`);
         io.exit(0);
     },
 }

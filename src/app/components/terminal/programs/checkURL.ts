@@ -1,6 +1,6 @@
-import { IO } from '../../types/IO';
+import { IO } from '../types/IO';
 import {ElectronService} from 'ngx-electron';
-import { Program } from '../../types/Program';
+import { Program } from '../types/Program';
 
 
 export const CheckURL: Program = <Program>{
@@ -12,7 +12,7 @@ export const CheckURL: Program = <Program>{
     main : (io: IO, args: string[]) => {
 
         if(args.length < 1){
-            io.out(`Not enough args ${io.EOL}`);
+            io.printerr(`Not enough args`);
             io.exec(`${CheckURL.command} help`, () =>{
                 io.exit(-1);
             });
@@ -22,7 +22,7 @@ export const CheckURL: Program = <Program>{
         const url = args[0];
 
         if(!url.startsWith(`https://`)){
-            io.out(`TThe url format must be https://&lt;host&gt;[:port][path][?query]${io.EOL}`,`color:red`);
+            io.printerr(`TThe url format must be https://&lt;host&gt;[:port][path][?query]`);
             return io.exit(-1);
         }
 
@@ -36,12 +36,12 @@ export const CheckURL: Program = <Program>{
         const onRespReceive = function (event, resJSON) {
             ipc.removeListener(`http`,onRespReceive);
             let res = JSON.parse(resJSON); 
-            io.out((args[1] ? args[1] : url)+ ` : `)
+            io.println((args[1] ? args[1] : url)+ ` : `)
             if(res.errno){
                 if(res.code == `ETIMEDOUT`){
-                    io.out(`Not reachable (${res.code})${io.EOL}`,`color:red`)
+                    io.printerr(`Not reachable (${res.code})`)
                 }else{
-                    io.out(`Error ${res.syscall} : ${res.code+io.EOL}`, `color:red`);
+                    io.printerr(`Error ${res.syscall} : ${res.code}`);
                 }
                 return io.exit(-1, res);
             }
@@ -49,18 +49,18 @@ export const CheckURL: Program = <Program>{
 
             let statusCode = res.statusCode;
             if(statusCode == 403){
-                io.out(`Restricted`,`color:red`);
+                io.println(`Restricted`,`color:red`);
             }else{
-                io.out(`Avaibale (HTTP ${statusCode})`,`color:green`);
+                io.println(`Avaibale (HTTP ${statusCode})`,`color:green`);
             }
-            io.out(io.EOL);                    
+            io.println('');                    
 
             return io.exit(0, res);  
         }
         ipc.on(`http`, onRespReceive);
     },
     help : (io: IO, args: string[]) => {
-        io.out(`Usage : ${CheckURL.command} https://&lt;host&gt;[:port][path][?query] [NAME]${io.EOL}`);
+        io.println(`Usage : ${CheckURL.command} https://&lt;host&gt;[:port][path][?query] [NAME]${io.EOL}`);
         io.exit(0);
     },
 }

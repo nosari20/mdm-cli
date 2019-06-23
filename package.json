@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "ng build --base-href && electron .",
-    "electron:win-build": "ng build --base-href --prod && electron-packager . Cli --icon=src/favicon.ico --overwrite --asar --platform=win32 --arch=ia32 --prune=true --out=electron/build/prod"
+    "electron:win-build": "ng build --base-href --prod && electron-packager . CLI --icon=src/favicon.ico --overwrite --asar --platform=win32 --arch=ia32 --prune=true --out=electron/build/prod"
   },
   "private": true,
   "dependencies": {
